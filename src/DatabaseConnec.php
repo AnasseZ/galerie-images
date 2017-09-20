@@ -85,9 +85,18 @@ class DatabaseConnec {
   */
   public function showMiniatures()
   {
-    $selectQuery = "SELECT * FROM Pictures";
-    $reponse = $this->connection->query($selectQuery);
+    $this->showRepMiniatures();
+  }
 
+  public function showRepMiniatures($id_rep=null)
+  {
+    if (isset($id_rep)) {
+      $selectQuery = "SELECT * FROM Pictures WHERE repertory_id = " . $id_rep;
+    }
+    else {
+      $selectQuery = "SELECT * FROM Pictures";
+    }
+    $reponse = $this->connection->query($selectQuery);
     while ($donnees = $reponse->fetch()) {
       echo '<div class="col-lg-4 col-md-4 col-xs-6"><div class="thumbnail">';
       echo '<img src="/assets/random/' . $donnees['file_name'] . '" alt="' . $donnees['title'] .'" style="width:350px; height:200px" onclick="openModal();currentSlide('. $donnees['id'] .')" class="hover-shadow cursor">';
@@ -108,12 +117,37 @@ class DatabaseConnec {
     }
   }
 
-  public  function showAllBaseRepertories()
+  public function showAllBaseRepertories()
   {
-    $selectQuery = "SELECT * FROM Repertory WHERE parent_id is null";
+    $this->showRepertory(null);
+  }
+
+  public function showRepertory($id_rep)
+  {
+    $source = imagecreatefromjpeg("../assets/random/avion.jpg"); // La photo est la source
+    $destination = imagecreatetruecolor(350, 200); // On crée la miniature vide
+
+    // Les fonctions imagesx et imagesy renvoient la largeur et la hauteur d'une image
+    $largeur_source = imagesx($source);
+    $hauteur_source = imagesy($source);
+    $largeur_destination = imagesx($destination);
+    $hauteur_destination = imagesy($destination);
+
+    // On crée la miniature
+    imagecopyresampled($destination, $source, 0, 0, 0, 0, $largeur_destination, $hauteur_destination, $largeur_source, $hauteur_source);
+
+    // On enregistre la miniature sous le nom "mini_couchersoleil.jpg"
+    imagejpeg($destination, "../assets/random/mini_avion.jpg");
+
+    if (isset($id_rep)) {
+      $selectQuery = "SELECT * FROM Repertory WHERE parent_id = " . $id_rep;
+    }
+    else {
+      $selectQuery = "SELECT * FROM Repertory WHERE parent_id is null";
+    }
     $reponse = $this->connection->query($selectQuery);
     while ($donnees = $reponse->fetch()) {
-      echo '<div class="col-md-3 glyphicon glyphicon-folder-open" aria-hidden="true"> &nbsp;' . $donnees['name'] . '</div>';
+      echo '<div class="col-md-3 glyphicon glyphicon-folder-open" aria-hidden="true"><a href="?rep=' . $donnees['id'] . '"> &nbsp;' . $donnees['name'] . '</a></div>';
     }
   }
 

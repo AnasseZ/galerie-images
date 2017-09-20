@@ -38,3 +38,14 @@ function showSlides(n) {
   dots[slideIndex - 1].className += " active";
   captionText.innerHTML = dots[slideIndex - 1].alt;
 }
+
+function gotorep(id) {
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("txtHint").innerHTML = this.responseText;
+      }
+  };
+  xmlhttp.open("GET", "gethint.php?q=" + str, true);
+  xmlhttp.send();
+}
