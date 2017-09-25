@@ -43,23 +43,40 @@ class DatabaseConnec {
   */
   public function loadFixtures()
   {
-    $creationRequest = "CREATE TABLE IF NOT EXISTS Pictures (
+    $createPictureTable = "CREATE TABLE IF NOT EXISTS Pictures (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    pic_path VARCHAR(200) NOT NULL,
+    repertory_id INT(6) NOT NULL,
+    file_name VARCHAR(200) NOT NULL,
     title VARCHAR(200) NOT NULL,
     description VARCHAR(200) NOT NULL
     )";
 
-    $this->connection->query($creationRequest);
+    $createRepertoryTable = "CREATE TABLE IF NOT EXISTS Repertory (
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    parent_id INT(6),
+    rep_path VARCHAR(200) NOT NULL,
+    name VARCHAR(200) NOT NULL
+    )";
 
-    $insertQueries = "INSERT INTO Pictures (pic_path, title, description)
-    VALUES ('/assets/jardin.jpg', 'Airbus 300', 'Un avion allant au Mexique.'),
-    ('/assets/avion.jpg', 'BMW 2018', 'La voiture innovante de l\'année.'),
-    ('/assets/aeroport.jpg', 'Yamaha X', 'Moto la plus rapide au monde.'),
-    ('/assets/maya.jpg', 'Decatbic', 'Vélo sans pédale.')
+    $this->connection->query($createPictureTable);
+    $this->connection->query($createRepertoryTable);
+
+    $insertRepertories = "INSERT INTO Repertory (id, parent_id, rep_path, name)
+    VALUES (1, null, 'random', 'Images aléatoires'),(2, null,'cars', 'Voitures de luxe'),
+    (3,2,'bmw', 'Marque BMW')
     ";
 
-    $this->connection->query($insertQueries);
+
+    $insertPictures = "INSERT INTO Pictures (repertory_id, file_name, title, description)
+    VALUES (1,'jardin.jpg', 'Airbus 300', 'Un avion allant au Mexique.'),
+    (1, 'avion.jpg', 'BMW 2018', 'La voiture innovante de l\'année.'),
+    (1, 'aeroport.jpg', 'Yamaha X', 'Moto la plus rapide au monde.'),
+    (1, 'maya.jpg', 'Decatbic', 'Vélo sans pédale.')
+    ";
+
+    $this->connection->query($insertRepertories);
+    $this->connection->query($insertPictures);
+    echo 'LOADFI';
   }
 
   /*
@@ -73,7 +90,7 @@ class DatabaseConnec {
 
     while ($donnees = $reponse->fetch()) {
       echo '<div class="col-lg-4 col-md-4 col-xs-6"><div class="thumbnail">';
-      echo '<img src="' . $donnees['pic_path'] . '" alt="' . $donnees['title'] .'" style="width:350px; height:200px" onclick="openModal();currentSlide('. $donnees['id'] .')" class="hover-shadow cursor">';
+      echo '<img src="/assets/random/' . $donnees['file_name'] . '" alt="' . $donnees['title'] .'" style="width:350px; height:200px" onclick="openModal();currentSlide('. $donnees['id'] .')" class="hover-shadow cursor">';
       echo '<div class="caption"><p><strong>' . $donnees['title'] . '</strong><br>' . $donnees['description'] . '</p></div></div></div>';
     }
   }
@@ -87,7 +104,16 @@ class DatabaseConnec {
     $reponse = $this->connection->query($selectQuery);
 
     while ($donnees = $reponse->fetch()) {
-      echo '<div class="mySlides"><img src="' . $donnees['pic_path'] . '" style="width:100%"></div>';
+      echo '<div class="mySlides"><img src="/assets/random/' . $donnees['file_name'] . '" style="width:100%"></div>';
+    }
+  }
+
+  public  function showAllBaseRepertories()
+  {
+    $selectQuery = "SELECT * FROM Repertory WHERE parent_id is null";
+    $reponse = $this->connection->query($selectQuery);
+    while ($donnees = $reponse->fetch()) {
+      echo '<div class="col-md-3 glyphicon glyphicon-folder-open" aria-hidden="true"> &nbsp;' . $donnees['name'] . '</div>';
     }
   }
 

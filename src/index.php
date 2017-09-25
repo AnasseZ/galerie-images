@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ALL);
 
 session_start();
 
@@ -11,6 +12,7 @@ $instance = DatabaseConnec::getInstance();
 
 // Utilisation des sessions pour ne remplir qu'une seule fois la base au démarrage
 if(!isset($_SESSION['first_run'])) {
+    echo 'test';
     $_SESSION['first_run'] = 1;
     $instance->loadFixtures();
 }
@@ -36,7 +38,7 @@ if(!isset($_SESSION['first_run'])) {
   <div id="myModal" class="modal">
     <span class="close cursor" onclick="closeModal()">&times;</span>
     <div class="modal-content">
-      <?php $instance->showModalPictures(); ?>
+      <?php  $instance->showModalPictures(); ?>
       <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
       <a class="next" onclick="plusSlides(1)">&#10095;</a>
 
@@ -51,10 +53,19 @@ if(!isset($_SESSION['first_run'])) {
   </div>
 
     <div class="container">
-      <h2> Mini projet </h2>
+      <h1> Mini projet </h1>
+      </br>
       <div class="row">
+        <h2> Répertoires à la racine </h2>
+      </br>
+        <?php  $instance->showAllBaseRepertories(); ?>
+      </div>
+      </br>
+      </br>
+      <div class="row">
+        <h2>Images contenus dans le répertoire </h2>
         <?php
-          $instance->showMiniatures();
+           $instance->showMiniatures();
          ?>
       </div>
     </div>
