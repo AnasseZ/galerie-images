@@ -12,12 +12,6 @@ class DatabaseConnec {
   {
     try {
         $this->connection = new PDO('mysql:host=localhost;dbname=gallery_photos', $this->user, $this->pass);
-        $this->loadFixtures();
-
-        // $this->affiche();
-        // $this->connection->query("DROP TABLE Pictures");
-        // Ferme la connexion à la base.
-        // $this->connection = null;
     } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
@@ -66,7 +60,7 @@ class DatabaseConnec {
   {
     $selectQuery = "SELECT * FROM Pictures";
     $reponse = $this->connection->query($selectQuery);
-    
+
     while ($donnees = $reponse->fetch()) {
       echo '<div class="col-md-4"><div class="thumbnail">';
       echo '<img src="' . $donnees['pic_path'] . '" alt="Lights" style="width:100%">';
