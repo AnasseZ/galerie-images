@@ -6,7 +6,7 @@ include("DatabaseConnec.php");
 
 $instance = DatabaseConnec::getInstance();
 
-if(!isset($_SESSION['first_run'])){
+if(!isset($_SESSION['first_run'])) {
     $_SESSION['first_run'] = 1;
     $instance->loadFixtures();
 }
