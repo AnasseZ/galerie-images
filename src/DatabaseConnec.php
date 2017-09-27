@@ -63,27 +63,35 @@ class DatabaseConnec {
 
     $insertRepertories = "INSERT INTO Repertory (id, parent_id, rep_path, name)
     VALUES (1, null, 'random', 'Images aléatoires'),(2, null,'cars', 'Voitures de luxe'),
-    (3,2,'bmw', 'Marque BMW')
+    (3,2,'bmw', 'Marque BMW'), (4, null, 'avions', 'Avions')
     ";
 
 
     $insertPictures = "INSERT INTO Pictures (repertory_id, file_name, title, description)
-    VALUES (1,'jardin.jpg', 'Airbus 300', 'Un avion allant au Mexique.'),
-    (1, 'avion.jpg', 'BMW 2018', 'La voiture innovante de l\'année.'),
-    (1, 'aeroport.jpg', 'Yamaha X', 'Moto la plus rapide au monde.'),
-    (1, 'maya.jpg', 'Decatbic', 'Vélo sans pédale.')
+    VALUES (1,'jardin.jpg', 'Jardin', 'Un jardin au petit matin'),
+    (1, 'avion.jpg', 'Escadron', 'Escadron d\'avions du 14 juillet.'),
+    (1, 'aeroport.jpg', 'Aéroport', 'Photo prise dans le futur'),
+    (1, 'maya.jpg', 'Sculpture', 'Ancienne sculpture maya ou asteque.'),
+    (1, 'elephant.jpg', 'Elephant', 'Création des machines de l\'ile.'),
+    (1, 'maison.jpg', 'Maison', 'Une maison.')
     ";
 
     $this->connection->query($insertRepertories);
     $this->connection->query($insertPictures);
-    echo 'LOADFI';
+    $this->createThumbNail('../assets/jardin.jpg', '../assets/tmp/jardin.jpg');
+    $this->createThumbNail('../assets/avion.jpg', '../assets/tmp/avion.jpg');
+    $this->createThumbNail('../assets/aeroport.jpg', '../assets/tmp/aeroport.jpg');
+    $this->createThumbNail('../assets/maya.jpg', '../assets/tmp/maya.jpg');
+    $this->createThumbNail('../assets/elephant.jpg', '../assets/tmp/elephant.jpg');
+    $this->createThumbNail('../assets/maison.jpg', '../assets/tmp/maison.jpg');
+
   }
 
   /*
     Méthode affichant toutes les images de la base via leurs miniatures
     responsives ainsi que les informations leurs correspondant
   */
-  public function showMiniatures()
+  public function showAllMiniatures()
   {
     $this->showRepMiniatures();
   }
@@ -99,7 +107,7 @@ class DatabaseConnec {
     $reponse = $this->connection->query($selectQuery);
     while ($donnees = $reponse->fetch()) {
       echo '<div class="col-lg-4 col-md-4 col-xs-6"><div class="thumbnail">';
-      echo '<img src="/assets/random/' . $donnees['file_name'] . '" alt="' . $donnees['title'] .'" style="width:350px; height:200px" onclick="openModal();currentSlide('. $donnees['id'] .')" class="hover-shadow cursor">';
+      echo '<img src="/assets/tmp/' . $donnees['file_name'] . '" alt="' . $donnees['title'] .'" style="width:350px; height:200px" onclick="openModal();currentSlide('. $donnees['id'] .')" class="hover-shadow cursor">';
       echo '<div class="caption"><p><strong>' . $donnees['title'] . '</strong><br>' . $donnees['description'] . '</p></div></div></div>';
     }
   }
@@ -113,32 +121,33 @@ class DatabaseConnec {
     $reponse = $this->connection->query($selectQuery);
 
     while ($donnees = $reponse->fetch()) {
-      echo '<div class="mySlides"><img src="/assets/random/' . $donnees['file_name'] . '" style="width:100%"></div>';
+      echo '<div class="mySlides"><img src="/assets/' . $donnees['file_name'] . '" style="width:100%"></div>';
     }
   }
 
   public function showAllBaseRepertories()
   {
-    $this->showRepertory(null);
+    $this->showRepContent(null);
   }
 
-  public function showRepertory($id_rep)
-  {
-    $source = imagecreatefromjpeg("../assets/random/avion.jpg"); // La photo est la source
-    $destination = imagecreatetruecolor(350, 200); // On crée la miniature vide
+  public function createThumbNail($source_path, $destination_path){
+    //"../assets/random/avion.jpg"
+    $source = imagecreatefromjpeg($source_path);
+    $destination = imagecreatetruecolor(350, 200);
 
-    // Les fonctions imagesx et imagesy renvoient la largeur et la hauteur d'une image
     $largeur_source = imagesx($source);
     $hauteur_source = imagesy($source);
     $largeur_destination = imagesx($destination);
     $hauteur_destination = imagesy($destination);
 
-    // On crée la miniature
     imagecopyresampled($destination, $source, 0, 0, 0, 0, $largeur_destination, $hauteur_destination, $largeur_source, $hauteur_source);
 
-    // On enregistre la miniature sous le nom "mini_couchersoleil.jpg"
-    imagejpeg($destination, "../assets/random/mini_avion.jpg");
+    //"../assets/random/mini_avion.jpg"
+    imagejpeg($destination, $destination_path);
+  }
 
+  public function showRepContent($id_rep)
+  {
     if (isset($id_rep)) {
       $selectQuery = "SELECT * FROM Repertory WHERE parent_id = " . $id_rep;
     }
@@ -151,4 +160,15 @@ class DatabaseConnec {
     }
   }
 
+  public function getRepertoryName($id_rep)
+  {
+    if (isset($id_rep)) {
+      $selectQuery = "SELECT * FROM Repertory WHERE id = " . $id_rep;
+      $reponse = $this->connection->query($selectQuery);
+      while ($donnees = $reponse->fetch()) {
+        return $donnees['name'];
+      }
+    }
+    return null;
+  }
 }

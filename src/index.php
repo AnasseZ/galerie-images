@@ -26,7 +26,7 @@ if(!isset($_SESSION['first_run'])) {
     <div id="myModal" class="modal">
       <span class="close cursor" onclick="closeModal()">&times;</span>
       <div class="modal-content">
-        <?php  $instance->showModalPictures(); ?>
+        <?php $instance->showModalPictures(); ?>
         <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
         <a class="next" onclick="plusSlides(1)">&#10095;</a>
 
@@ -39,32 +39,14 @@ if(!isset($_SESSION['first_run'])) {
     <div class="container">
       <h1> Mini projet </h1>
       </br>
+      <a href="/src/" >Accueil</a> &nbsp; <a href="/src/repertories.php">Répertoires</a>
       <div class="content">
-        <?php
-          showheader();
-          if(isset($_GET['rep'])) {
-            $instance->showRepertory($_GET['rep']);
-        ?>
-        </br>
-        <?php
-          $instance->showRepMiniatures($_GET['rep']);
-          }
-          else {
-        ?>
-        <div class="row">
-          <h2> Répertoires à la racine </h2>
-        </br>
-          <?php  $instance->showAllBaseRepertories(); ?>
-        </div>
-        </br>
+        <?php showheader(); ?>
         </br>
         <div class="row">
-          <h2>Images contenus dans le répertoire </h2>
-          <?php $instance->showMiniatures(); ?>
+          <h2>Toutes les images</h2>
+          <?php $instance->showAllMiniatures(); ?>
         </div>
-        <?php
-          }
-        ?>
       </div>
 
     </div>
