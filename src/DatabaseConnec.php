@@ -43,6 +43,8 @@ class DatabaseConnec {
   */
   public function loadFixtures()
   {
+    $this->connection->query("DROP TABLE IF EXISTS Pictures, Repository");
+
     $createPictureTable = "CREATE TABLE IF NOT EXISTS Pictures (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     repertory_id INT(6) NOT NULL,
@@ -62,22 +64,26 @@ class DatabaseConnec {
     $this->connection->query($createRepertoryTable);
 
     $insertRepertories = "INSERT INTO Repertory (id, parent_id, rep_path, name)
-    VALUES (1, null, 'random', 'Images aléatoires'),(2, null,'cars', 'Voitures de luxe'),
-    (3,2,'bmw', 'Marque BMW'), (4, null, 'avions', 'Avions')
+    VALUES (1, null, 'random', 'Images aléatoires','Répertoire avec des images aléatoires sans réel liens'),
+    (2, null,'cars', 'Voitures de luxe', 'Des voitures qui coutent une blinde'),
+    (3,2,'bmw', 'Marque BMW', 'Bayerische Motoren Werke'),
+    (4, null, 'avions', 'Avions', 'Des avions parcequ\'on aime les avions)
     ";
 
 
     $insertPictures = "INSERT INTO Pictures (repertory_id, file_name, title, description)
     VALUES (1,'jardin.jpg', 'Jardin', 'Un jardin au petit matin'),
-    (1, 'avion.jpg', 'Escadron', 'Escadron d\'avions du 14 juillet.'),
-    (1, 'aeroport.jpg', 'Aéroport', 'Photo prise dans le futur'),
+    (4, 'avion.jpg', 'Escadron', 'Escadron d\'avions du 14 juillet.'),
+    (4, 'aeroport.jpg', 'Aéroport', 'Photo prise dans le futur'),
     (1, 'maya.jpg', 'Sculpture', 'Ancienne sculpture maya ou asteque.'),
     (1, 'elephant.jpg', 'Elephant', 'Création des machines de l\'ile.'),
-    (1, 'maison.jpg', 'Maison', 'Une maison.')
+    (1, 'maison.jpg', 'Maison', 'Une maison.'),
+    (2, 'ferarri.jpg', 'Ferarri', 'Ma future voiture.')
     ";
 
     $this->connection->query($insertRepertories);
     $this->connection->query($insertPictures);
+    
     $this->createThumbNail('../assets/jardin.jpg', '../assets/tmp/jardin.jpg');
     $this->createThumbNail('../assets/avion.jpg', '../assets/tmp/avion.jpg');
     $this->createThumbNail('../assets/aeroport.jpg', '../assets/tmp/aeroport.jpg');

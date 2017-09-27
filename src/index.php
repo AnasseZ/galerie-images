@@ -12,8 +12,7 @@ $instance = DatabaseConnec::getInstance();
 include 'utils.php';
 
 // Utilisation des sessions pour ne remplir qu'une seule fois la base au démarrage
-if(!isset($_SESSION['first_run'])) {
-    $_SESSION['first_run'] = 1;
+if(!isset($_GET['first_run'])) {
     $instance->loadFixtures();
 }
 ?>
@@ -56,6 +55,9 @@ if(!isset($_SESSION['first_run'])) {
             </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="#galery">Galeries photos</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="?first_run=true">Réinitialiser la base</a>
             </li>
           </ul>
         </div>
