@@ -42,7 +42,7 @@ class DatabaseConnec {
   */
   public function loadFixtures()
   {
-    $this->connection->query("DROP TABLE IF EXISTS Picture, Repository");
+    $this->connection->query("DROP TABLE IF EXISTS Picture, Repertory");
 
     $createPictureTable = "CREATE TABLE IF NOT EXISTS Picture (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -55,19 +55,21 @@ class DatabaseConnec {
     $createRepertoryTable = "CREATE TABLE IF NOT EXISTS Repertory (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     parent_id INT(6),
-    rep_path VARCHAR(200) NOT NULL,
-    name VARCHAR(200) NOT NULL
+    name VARCHAR(200) NOT NULL,
+    description VARCHAR(200) NOT NULL
     )";
 
     $this->connection->query($createPictureTable);
     $this->connection->query($createRepertoryTable);
 
-    $insertRepertories = "INSERT INTO Repertory (id, parent_id, rep_path, name)
-    VALUES (1, null, 'random', 'Images aléatoires','Répertoire avec des images aléatoires sans réel liens'),
-    (2, null,'cars', 'Voitures de luxe', 'Des voitures qui coutent une blinde'),
-    (3,2,'bmw', 'Marque BMW', 'Bayerische Motoren Werke'),
-    (4, null, 'avions', 'Avions', 'Des avions parcequ\'on aime les avions)
+    $insertRepertories = "INSERT INTO Repertory (id, parent_id, name, description)
+    VALUES (1, null, 'Images aléatoires','Répertoire avec des images aléatoires sans réel liens'),
+    (2, null, 'Voitures de luxe', 'Des voitures qui coutent une blinde'),
+    (3, 2, 'Marque BMW', 'Bayerische Motoren Werke'),
+    (4, null, 'Avions', 'Des avions parcequ\'on aime les avions')
     ";
+
+    $this->connection->query($insertRepertories);
 
     $fileNames = [
       'jardin',
@@ -89,7 +91,6 @@ class DatabaseConnec {
     (2, '$fileNames[6].jpg', 'Ferarri', 'Ma future voiture.')
     ";
 
-    $this->connection->query($insertRepertories);
     $this->connection->query($insertPictures);
 
     for ($i=0; $i < count($fileNames) ; $i++) {
@@ -144,10 +145,10 @@ class DatabaseConnec {
   public function showModalPictures($id_rep=null)
   {
     if (isset($id_rep)) {
-      $selectQuery = "SELECT * FROM Pictures WHERE repertory_id = " . $id_rep;
+      $selectQuery = "SELECT * FROM Picture WHERE repertory_id = " . $id_rep;
     }
     else {
-      $selectQuery = "SELECT * FROM Pictures";
+      $selectQuery = "SELECT * FROM Picture";
     }
     $reponse = $this->connection->query($selectQuery);
     while ($donnees = $reponse->fetch()) {
@@ -213,10 +214,6 @@ class DatabaseConnec {
     }
 
     $reponse = $this->connection->query($selectQuery);
-    if ($reponse->rowCount()==0) {
-      echo '
-      <div class="row"><div class="col-md-12"><b>Il n\'y a pas de sous répertoires...</b></div></div>';
-    }
     while ($donnees = $reponse->fetch()) {
       echo '
       <div class="col-md-4">
@@ -226,7 +223,10 @@ class DatabaseConnec {
           </a>
         </div>';
     }
-
+    if ($reponse->rowCount()==0) {
+      echo '
+      <div class="row"><div class="col-md-12"><b>Il n\'y a pas de sous répertoires...</b></div></div>';
+    }
   }
 
   public function getRepertoryName($id_rep)
