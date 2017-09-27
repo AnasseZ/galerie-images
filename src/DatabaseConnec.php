@@ -96,7 +96,7 @@ class DatabaseConnec {
     $this->showRepMiniatures();
   }
 
-  public function showRepMiniatures($id_rep=null)
+  public function showRepMiniatures($id_rep = null)
   {
     if (isset($id_rep)) {
       $selectQuery = "SELECT * FROM Pictures WHERE repertory_id = " . $id_rep;
@@ -106,9 +106,21 @@ class DatabaseConnec {
     }
     $reponse = $this->connection->query($selectQuery);
     while ($donnees = $reponse->fetch()) {
-      echo '<div class="col-lg-4 col-md-4 col-xs-6"><div class="thumbnail">';
-      echo '<img src="/assets/tmp/' . $donnees['file_name'] . '" alt="' . $donnees['title'] .'" style="width:350px; height:200px" onclick="openModal();currentSlide('. $donnees['id'] .')" class="hover-shadow cursor">';
-      echo '<div class="caption"><p><strong>' . $donnees['title'] . '</strong><br>' . $donnees['description'] . '</p></div></div></div>';
+      echo '<div class="col-md-4 col-sm-6 galery-item">
+        <a class="galery-link" data-toggle="modal" href="#myModal1">
+          <div class="galery-hover">
+            <div class="galery-hover-content">
+              <i class="fa fa-plus fa-3x"></i>
+            </div>
+          </div>
+          <img class="img-fluid" style="width:350px; height:200px;" src="/assets/tmp/' .
+           $donnees['file_name'] . '" alt="' . $donnees['title'] .'">
+        </a>
+        <div class="galery-caption">
+          <h4>' . $donnees['title'] . '</h4>
+          <p class="text-muted">' . $donnees['description'] . '</p>
+        </div>
+      </div>';
     }
   }
 
@@ -146,7 +158,7 @@ class DatabaseConnec {
     imagejpeg($destination, $destination_path);
   }
 
-  public function showRepContent($id_rep)
+  public function showRepContent($id_rep = null)
   {
     if (isset($id_rep)) {
       $selectQuery = "SELECT * FROM Repertory WHERE parent_id = " . $id_rep;
@@ -154,9 +166,16 @@ class DatabaseConnec {
     else {
       $selectQuery = "SELECT * FROM Repertory WHERE parent_id is null";
     }
+
     $reponse = $this->connection->query($selectQuery);
     while ($donnees = $reponse->fetch()) {
-      echo '<div class="col-md-3 glyphicon glyphicon-folder-open" aria-hidden="true"><a href="?rep=' . $donnees['id'] . '"> &nbsp;' . $donnees['name'] . '</a></div>';
+      echo '  <div class="col-md-4">
+          <a href="#" class="rep-base">
+              <span class="fa fa-folder-open fa-4x"></span>
+              <h4 class="name-rep">' . $donnees['name'] . '</h4>
+              <p class="text-muted"> Répertoire avec des images aléatoires sans réel liens</p>
+          </a>
+        </div>';
     }
   }
 

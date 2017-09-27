@@ -13,7 +13,6 @@ include 'utils.php';
 
 // Utilisation des sessions pour ne remplir qu'une seule fois la base au démarrage
 if(!isset($_SESSION['first_run'])) {
-    echo 'test';
     $_SESSION['first_run'] = 1;
     $instance->loadFixtures();
 }
@@ -21,35 +20,206 @@ if(!isset($_SESSION['first_run'])) {
 
 <!DOCTYPE html>
 <html lang="fr">
-  <body>
 
-    <div id="myModal" class="modal">
-      <span class="close cursor" onclick="closeModal()">&times;</span>
-      <div class="modal-content">
-        <?php $instance->showModalPictures(); ?>
-        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+  <head>
 
-        <div class="caption-container">
-          <p id="caption"></p>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Mini projet - Mercredi</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template -->
+    <link href="index.css" rel="stylesheet">
+
+  </head>
+
+  <body id="page-top">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">Mini-Projet du mercredi </a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Menu
+          <i class="fa fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#repertoires">Parcours des Répertoires</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#galery">Galeries photos</a>
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
+    </nav>
 
-    <div class="container">
-      <h1> Mini projet </h1>
-      </br>
-      <a href="/src/" >Accueil</a> &nbsp; <a href="/src/repertories.php">Répertoires</a>
-      <div class="content">
-        <?php showheader(); ?>
-        </br>
+    <!-- Header -->
+    <header class="masthead">
+      <div class="container">
+        <div class="intro-text">
+          <div class="intro-lead-in">Mini projet du mercredi</div>
+          <div class="intro-heading">Galeries photos</div>
+          <a class="btn btn-menu js-scroll-trigger" href="#repertoires">Parcourir les répertoires</a>
+          <a class="btn btn-menu js-scroll-trigger" href="#galery">Afficher toutes les images</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Repertoires -->
+    <section id="repertoires">
+
+      <div class="container">
         <div class="row">
-          <h2>Toutes les images</h2>
-          <?php $instance->showAllMiniatures(); ?>
+          <div class="col-lg-12 text-center">
+            <h2 class="name-rep">Parcourir les répertoires</h2>
+            <h3 class="description-bloc text-muted">Répertoires à la base de la racine</h3>
+          </div>
+        </div>
+
+        <div class="row text-center">
+          <?php $instance->showRepContent() ?>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Galerie photos -->
+    <section class="bg-light" id="galery">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <h2 class="name-rep">Galeries photos</h2>
+            <h3 class="description-bloc text-muted">Toutes les images présentes dans tous les répertoires et sous répertoires</h3>
+          </div>
+        </div>
+
+        <div class="row">
+          <?php $instance->showRepMiniatures() ?>
         </div>
       </div>
+    </section>
 
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <span class="copyright">Copyright &copy; ZOUGARH Anasse, MALINGE Quentin, MASSON Emilien et FREMONT Florian</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Modales -->
+
+    <div class="galery-modal modal fade" id="myModal1" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl"></div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+                <div class="col-lg-2 button-modal">
+                    <button type="button" class="btn btn btn-menu btn-prev">Précédente</button>
+                </div>
+              <div class="col-lg-8 mx-auto">
+                <div class="modal-body">
+                  <h2>Nom de l'image</h2>
+                  <p class="item-intro text-muted">Description de l'image</p>
+                  <img class="img-fluid d-block mx-auto" src="img/avions-color.jpg" alt="">
+                </div>
+              </div>
+              <div class="col-lg-2 button-modal">
+                    <button type="button" class="btn btn btn-menu btn-next">Suivante</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <div class="galery-modal modal fade" id="myModal2" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl"></div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-2 button-modal">
+                    <button type="button" class="btn btn btn-menu btn-prev">Précédente</button>
+              </div>
+              <div class="col-lg-8 mx-auto">
+                <div class="modal-body">
+                  <h2>Nom de l'image</h2>
+                  <p class="item-intro text-muted">Description de l'image</p>
+                  <img class="img-fluid d-block mx-auto" src="img/avion.jpg" alt="">
+                </div>
+              </div>
+              <div class="col-lg-2 button-modal">
+                  <button type="button" class="btn btn btn-menu btn-next">Suivante</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="galery-modal modal fade" id="myModal3" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+              <div class="rl"></div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="row">
+               <div class="col-lg-2 button-modal">
+                    <button type="button" class="btn btn btn-menu btn-prev">Précédente</button>
+               </div>
+              <div class="col-lg-8 mx-auto">
+                <div class="modal-body">
+                  <h2>Nom de l'image</h2>
+                  <p class="item-intro text-muted">Description de l'image</p>
+                  <img class="img-fluid d-block mx-auto" src="img/elephant.jpg" alt="">
+                </div>
+              </div>
+              <div class="col-lg-2 button-modal">
+                    <button type="button" class="btn btn btn-menu btn-next">Suivante</button>
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <script src="../vendor/popper/popper.min.js"></script>
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for this template -->
+    <script src="agency.js"></script>
 
   </body>
+
 </html>
