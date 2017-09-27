@@ -78,18 +78,25 @@ class DatabaseConnec {
     (1, 'maya.jpg', 'Sculpture', 'Ancienne sculpture maya ou asteque.'),
     (1, 'elephant.jpg', 'Elephant', 'Création des machines de l\'ile.'),
     (1, 'maison.jpg', 'Maison', 'Une maison.'),
-    (2, 'ferarri.jpg', 'Ferarri', 'Ma future voiture.')
+    (2, 'ferrari.jpg', 'Ferarri', 'Ma future voiture.')
     ";
 
     $this->connection->query($insertRepertories);
     $this->connection->query($insertPictures);
-    
-    $this->createThumbNail('../assets/jardin.jpg', '../assets/tmp/jardin.jpg');
+
+    /*$this->createThumbNail('../assets/jardin.jpg', '../assets/tmp/jardin.jpg');
     $this->createThumbNail('../assets/avion.jpg', '../assets/tmp/avion.jpg');
     $this->createThumbNail('../assets/aeroport.jpg', '../assets/tmp/aeroport.jpg');
     $this->createThumbNail('../assets/maya.jpg', '../assets/tmp/maya.jpg');
     $this->createThumbNail('../assets/elephant.jpg', '../assets/tmp/elephant.jpg');
     $this->createThumbNail('../assets/maison.jpg', '../assets/tmp/maison.jpg');
+    */
+    $getPicturesQuery = "SELECT file_name FROM Pictures";
+    $reponse = $this->connection->query($getPicturesQuery);
+
+    while ($donnees = $reponse->fetch()) {
+      $this->createThumbNail('../assets/' . $donnees["file_name"], '../assets/tmp/' . $donnees["file_name"]);
+    }
 
   }
 
