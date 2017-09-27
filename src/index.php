@@ -40,7 +40,14 @@ if(isset($_GET['first_run']) and $_GET['first_run'] == 15) {
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
       <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top">Mini-Projet du mercredi </a>
+        <?php
+          if(isset($_GET['rep'])){
+            echo '<a class="navbar-brand js-scroll-trigger" href="/src/">Mini-Projet du mercredi </a>';
+          }
+          else{
+            echo '<a class="navbar-brand js-scroll-trigger" href="#page-top">Mini-Projet du mercredi </a>';
+          }
+        ?>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           Menu
           <i class="fa fa-bars"></i>
@@ -51,7 +58,7 @@ if(isset($_GET['first_run']) and $_GET['first_run'] == 15) {
               <a class="nav-link js-scroll-trigger" href="#repertoires">Parcours des Répertoires</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#galery">Galeries photos</a>
+              <a class="nav-link js-scroll-trigger" href="#galery">Galerie photos</a>
             </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="?first_run=15">Réinitialiser la base</a>
@@ -66,7 +73,7 @@ if(isset($_GET['first_run']) and $_GET['first_run'] == 15) {
       <div class="container">
         <div class="intro-text">
           <div class="intro-lead-in">Mini projet du mercredi</div>
-          <div class="intro-heading">Galeries photos</div>
+          <div class="intro-heading">Galerie photos</div>
           <a class="btn btn-menu js-scroll-trigger" href="#repertoires">Parcourir les répertoires</a>
           <a class="btn btn-menu js-scroll-trigger" href="#galery">Afficher toutes les images</a>
         </div>
@@ -80,12 +87,26 @@ if(isset($_GET['first_run']) and $_GET['first_run'] == 15) {
         <div class="row">
           <div class="col-lg-12 text-center">
             <h2 class="name-rep">Parcourir les répertoires</h2>
-            <h3 class="description-bloc text-muted">Répertoires à la base de la racine</h3>
+            <?php
+              if(isset($_GET['rep'])){
+                echo '<h4 class="description-bloc text-muted">'. $instance->getRepertoryName($_GET['rep']) .'</h4>';
+              }
+              else {
+                echo '<h3 class="description-bloc text-muted">Répertoires à la base de la racine</h3>';
+              }
+            ?>
           </div>
         </div>
 
         <div class="row text-center">
-          <?php $instance->showRepContent() ?>
+          <?php
+            if(isset($_GET['rep'])){
+              $instance->showRepContent($_GET['rep']);
+            }
+            else {
+              $instance->showRepContent();
+            }
+          ?>
         </div>
 
       </div>
@@ -97,13 +118,28 @@ if(isset($_GET['first_run']) and $_GET['first_run'] == 15) {
 
         <div class="row">
           <div class="col-lg-12 text-center">
-            <h2 class="name-rep">Galeries photos</h2>
-            <h3 class="description-bloc text-muted">Toutes les images présentes dans tous les répertoires et sous répertoires</h3>
+            <h2 class="name-rep">Galerie photos</h2>
+            <?php
+            if(isset($_GET['rep'])){
+              echo '<h4 class="description-bloc text-muted">'. $instance->getRepertoryName($_GET['rep']) .'</h4>';
+            }
+            else {
+              echo '<h3 class="description-bloc text-muted">Toutes les images présentes dans tous les répertoires et sous répertoires</h3>';
+            }
+            ?>
+
           </div>
         </div>
 
         <div class="row">
-          <?php $instance->showRepMiniatures() ?>
+          <?php
+            if(isset($_GET['rep'])){
+              $instance->showRepMiniatures($_GET['rep']);
+            }
+            else {
+              $instance->showRepMiniatures();
+            }
+          ?>
         </div>
       </div>
     </section>
@@ -113,16 +149,21 @@ if(isset($_GET['first_run']) and $_GET['first_run'] == 15) {
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <span class="copyright">Copyright &copy; ZOUGARH Anasse, MALINGE Quentin, MASSON Emilien et FREMONT Florian</span>
+            <span class="copyright">Copyright &copy; ZOUGARH Anasse, MALINGE Quentin, MASSON Emilien et FREMONT Floriant.</span>
           </div>
         </div>
       </div>
     </footer>
 
     <!-- Modales -->
-
-    <?php $instance->showModalPictures() ?>
-
+    <?php
+      if(isset($_GET['rep'])){
+        $instance->showModalPictures($_GET['rep']);
+      }
+      else {
+        $instance->showModalPictures();
+      }
+    ?>
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/popper/popper.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>

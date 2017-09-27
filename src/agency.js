@@ -51,6 +51,12 @@
     $(".navbar-collapse").collapse("hide");
   });
 
+  $(".galery-hover").click(function() {
+    var img = $(this).next();
+    var id = $( img.attr('data-id') );
+    $(id).attr('src', img.attr('data-src'));
+  });
+
   // Activate scrollspy to add active class to navbar items on scroll
   $("body").scrollspy({
     target: "#mainNav",
@@ -65,17 +71,4 @@
       $("#mainNav").removeClass("navbar-shrink");
     }
   });
-
-$(".thumbnail").addEventListener('click', function() {
-    alert('Hello world');
-    console.log("AZY");
-}, false);
-
 })(jQuery); // End of use strict
-
-
-
-  alert("WESH");
-  console.log("Click");
-  $("#img-" + $(this).attr('id')).attr('src', $(this).attr('data-src'));
-};

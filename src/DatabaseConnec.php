@@ -116,6 +116,9 @@ class DatabaseConnec {
       $selectQuery = "SELECT * FROM Picture";
     }
     $reponse = $this->connection->query($selectQuery);
+    if ($reponse->rowCount()==0) {
+      echo "<b>Il n'y a pas d'images dans ce répertoire.</b>";
+    }
     while ($donnees = $reponse->fetch()) {
       echo '<div class="col-md-4 col-sm-6 galery-item">
         <a class="galery-link" data-toggle="modal" href="#myModal'. $donnees['id'] . '">
@@ -124,7 +127,7 @@ class DatabaseConnec {
               <i class="fa fa-plus fa-3x"></i>
             </div>
           </div>
-          <img class="img-fluid thumbnail" onClick="loadPicture(' .$donnees['id']. ')" style="width:350px; height:200px;" src="/assets/tmp/' .
+          <img data-id="#' . $donnees['id'] . '" class="img-fluid"  style="width:350px; height:200px;" data-src="/assets/'. $donnees['file_name'] . '"  src="/assets/tmp/' .
            $donnees['file_name'] . '" alt="' . $donnees['title'] .'">
         </a>
         <div class="galery-caption">
@@ -166,7 +169,7 @@ class DatabaseConnec {
                   <div class="modal-body">
                     <h2>'. $donnees['title'] . '</h2>
                     <p class="item-intro text-muted">'. $donnees['description'] . '</p>
-                    <img class="img-fluid d-block mx-auto" src="/assets/'. $donnees['file_name'] . '" alt="">
+                    <img id="img-'. $donnees['id'] .'" class="img-fluid d-block mx-auto" alt="' . $donnees['title'] . ' " src="/assets/'. $donnees['file_name'] . '">
                   </div>
                 </div>
                 <div class="col-lg-2 button-modal">
@@ -210,14 +213,20 @@ class DatabaseConnec {
     }
 
     $reponse = $this->connection->query($selectQuery);
+    if ($reponse->rowCount()==0) {
+      echo '
+      <div class="row"><div class="col-md-12"><b>Il n\'y a pas de sous répertoires...</b></div></div>';
+    }
     while ($donnees = $reponse->fetch()) {
-      echo '<div class="col-md-4">
-          <a href="#" class="rep-base">
+      echo '
+      <div class="col-md-4">
+          <a href="?rep='. $donnees['id'] .'" class="rep-base">
               <span class="fa fa-folder-open fa-4x"></span>
               <h4 class="name-rep">' . $donnees['name'] . '</h4>
           </a>
         </div>';
     }
+
   }
 
   public function getRepertoryName($id_rep)
