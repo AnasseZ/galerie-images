@@ -13,7 +13,6 @@ class DatabaseConnec {
   {
     try {
         $this->connection = new PDO('mysql:host=localhost;dbname=gallery_photos', $this->user, $this->pass);
-        // $this->connection->query("DROP TABLE Pictures");
     } catch (PDOException $e) {
         print "Erreur !: " . $e->getMessage();
         die();
@@ -43,9 +42,9 @@ class DatabaseConnec {
   */
   public function loadFixtures()
   {
-    $this->connection->query("DROP TABLE IF EXISTS Pictures, Repository");
+    $this->connection->query("DROP TABLE IF EXISTS Picture, Repository");
 
-    $createPictureTable = "CREATE TABLE IF NOT EXISTS Pictures (
+    $createPictureTable = "CREATE TABLE IF NOT EXISTS Picture (
     id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     repertory_id INT(6) NOT NULL,
     file_name VARCHAR(200) NOT NULL,
@@ -70,25 +69,31 @@ class DatabaseConnec {
     (4, null, 'avions', 'Avions', 'Des avions parcequ\'on aime les avions)
     ";
 
+    $fileNames = [
+      'jardin',
+      'avion',
+      'aeroport',
+      'maya',
+      'elephant',
+      'maison',
+      'ferrari'
+    ];
 
-    $insertPictures = "INSERT INTO Pictures (repertory_id, file_name, title, description)
-    VALUES (1,'jardin.jpg', 'Jardin', 'Un jardin au petit matin'),
-    (4, 'avion.jpg', 'Escadron', 'Escadron d\'avions du 14 juillet.'),
-    (4, 'aeroport.jpg', 'Aéroport', 'Photo prise dans le futur'),
-    (1, 'maya.jpg', 'Sculpture', 'Ancienne sculpture maya ou asteque.'),
-    (1, 'elephant.jpg', 'Elephant', 'Création des machines de l\'ile.'),
-    (1, 'maison.jpg', 'Maison', 'Une maison.'),
-    (2, 'ferrari.jpg', 'Ferarri', 'Ma future voiture.')
+    $insertPictures = "INSERT INTO Picture (repertory_id, file_name, title, description)
+    VALUES (1,'$fileNames[0].jpg', 'Jardin', 'Un jardin au petit matin'),
+    (4, '$fileNames[1].jpg', 'Escadron', 'Escadron d\'avions du 14 juillet.'),
+    (4, '$fileNames[2].jpg', 'Aéroport', 'Photo prise dans le futur'),
+    (1, '$fileNames[3].jpg', 'Sculpture', 'Ancienne sculpture maya ou asteque.'),
+    (1, '$fileNames[4].jpg', 'Elephant', 'Création des machines de l\'ile.'),
+    (1, '$fileNames[5].jpg', 'Maison', 'Une maison.'),
+    (2, '$fileNames[6].jpg', 'Ferarri', 'Ma future voiture.')
     ";
 
     $this->connection->query($insertRepertories);
     $this->connection->query($insertPictures);
 
-    $getPicturesQuery = "SELECT file_name FROM Pictures";
-    $reponse = $this->connection->query($getPicturesQuery);
-
-    while ($donnees = $reponse->fetch()) {
-      $this->createThumbNail('../assets/' . $donnees["file_name"], '../assets/tmp/' . $donnees["file_name"]);
+    for ($i=0; $i < count($fileNames) ; $i++) {
+      $this->createThumbNail('../assets/' . $fileNames[$i] . '.jpg', '../assets/tmp/' . $fileNames[$i] . '.jpg');
     }
 
   }
@@ -105,10 +110,10 @@ class DatabaseConnec {
   public function showRepMiniatures($id_rep = null)
   {
     if (isset($id_rep)) {
-      $selectQuery = "SELECT * FROM Pictures WHERE repertory_id = " . $id_rep;
+      $selectQuery = "SELECT * FROM Picture WHERE repertory_id = " . $id_rep;
     }
     else {
-      $selectQuery = "SELECT * FROM Pictures";
+      $selectQuery = "SELECT * FROM Picture";
     }
     $reponse = $this->connection->query($selectQuery);
     while ($donnees = $reponse->fetch()) {
@@ -181,8 +186,8 @@ class DatabaseConnec {
     $this->showRepContent(null);
   }
 
-  public function createThumbNail($source_path, $destination_path){
-    //"../assets/random/avion.jpg"
+  public function createThumbNail($source_path, $destination_path)
+  {
     $source = imagecreatefromjpeg($source_path);
     $destination = imagecreatetruecolor(350, 200);
 
@@ -192,8 +197,6 @@ class DatabaseConnec {
     $hauteur_destination = imagesy($destination);
 
     imagecopyresampled($destination, $source, 0, 0, 0, 0, $largeur_destination, $hauteur_destination, $largeur_source, $hauteur_source);
-
-    //"../assets/random/mini_avion.jpg"
     imagejpeg($destination, $destination_path);
   }
 
@@ -212,7 +215,6 @@ class DatabaseConnec {
           <a href="#" class="rep-base">
               <span class="fa fa-folder-open fa-4x"></span>
               <h4 class="name-rep">' . $donnees['name'] . '</h4>
-              <p class="text-muted"> Répertoire avec des images aléatoires sans réel liens</p>
           </a>
         </div>';
     }
@@ -223,10 +225,12 @@ class DatabaseConnec {
     if (isset($id_rep)) {
       $selectQuery = "SELECT * FROM Repertory WHERE id = " . $id_rep;
       $reponse = $this->connection->query($selectQuery);
+
       while ($donnees = $reponse->fetch()) {
         return $donnees['name'];
       }
     }
+
     return null;
   }
 }
