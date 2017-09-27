@@ -12,7 +12,7 @@ $instance = DatabaseConnec::getInstance();
 include 'utils.php';
 
 // Utilisation des sessions pour ne remplir qu'une seule fois la base au démarrage
-if(!isset($_GET['first_run'])) {
+if(isset($_GET['first_run'])) {
     $instance->loadFixtures();
 }
 ?>
