@@ -84,13 +84,6 @@ class DatabaseConnec {
     $this->connection->query($insertRepertories);
     $this->connection->query($insertPictures);
 
-    /*$this->createThumbNail('../assets/jardin.jpg', '../assets/tmp/jardin.jpg');
-    $this->createThumbNail('../assets/avion.jpg', '../assets/tmp/avion.jpg');
-    $this->createThumbNail('../assets/aeroport.jpg', '../assets/tmp/aeroport.jpg');
-    $this->createThumbNail('../assets/maya.jpg', '../assets/tmp/maya.jpg');
-    $this->createThumbNail('../assets/elephant.jpg', '../assets/tmp/elephant.jpg');
-    $this->createThumbNail('../assets/maison.jpg', '../assets/tmp/maison.jpg');
-    */
     $getPicturesQuery = "SELECT file_name FROM Pictures";
     $reponse = $this->connection->query($getPicturesQuery);
 
@@ -120,13 +113,13 @@ class DatabaseConnec {
     $reponse = $this->connection->query($selectQuery);
     while ($donnees = $reponse->fetch()) {
       echo '<div class="col-md-4 col-sm-6 galery-item">
-        <a class="galery-link" data-toggle="modal" href="#myModal1">
+        <a class="galery-link" data-toggle="modal" href="#myModal'. $donnees['id'] . '">
           <div class="galery-hover">
             <div class="galery-hover-content">
               <i class="fa fa-plus fa-3x"></i>
             </div>
           </div>
-          <img class="img-fluid" style="width:350px; height:200px;" src="/assets/tmp/' .
+          <img class="img-fluid thumbnail" onClick="loadPicture(' .$donnees['id']. ')" style="width:350px; height:200px;" src="/assets/tmp/' .
            $donnees['file_name'] . '" alt="' . $donnees['title'] .'">
         </a>
         <div class="galery-caption">
@@ -140,13 +133,46 @@ class DatabaseConnec {
   /*
     Méthode affichant les slides des images dans la Carousel
   */
-  public function showModalPictures()
+  public function showModalPictures($id_rep=null)
   {
-    $selectQuery = "SELECT * FROM Pictures";
+    if (isset($id_rep)) {
+      $selectQuery = "SELECT * FROM Pictures WHERE repertory_id = " . $id_rep;
+    }
+    else {
+      $selectQuery = "SELECT * FROM Pictures";
+    }
     $reponse = $this->connection->query($selectQuery);
-
     while ($donnees = $reponse->fetch()) {
-      echo '<div class="mySlides"><img src="/assets/' . $donnees['file_name'] . '" style="width:100%"></div>';
+      echo '
+      <div class="galery-modal modal fade" id="myModal'. $donnees['id'] . '" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="close-modal" data-dismiss="modal">
+              <div class="lr">
+                <div class="rl"></div>
+              </div>
+            </div>
+            <div class="container">
+              <div class="row">
+                  <div class="col-lg-2 button-modal">
+                      <button type="button" class="btn btn btn-menu btn-prev">Précédente</button>
+                  </div>
+                <div class="col-lg-8 mx-auto">
+                  <div class="modal-body">
+                    <h2>'. $donnees['title'] . '</h2>
+                    <p class="item-intro text-muted">'. $donnees['description'] . '</p>
+                    <img class="img-fluid d-block mx-auto" src="/assets/'. $donnees['file_name'] . '" alt="">
+                  </div>
+                </div>
+                <div class="col-lg-2 button-modal">
+                      <button type="button" class="btn btn btn-menu btn-next">Suivante</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      ';
     }
   }
 
@@ -182,7 +208,7 @@ class DatabaseConnec {
 
     $reponse = $this->connection->query($selectQuery);
     while ($donnees = $reponse->fetch()) {
-      echo '  <div class="col-md-4">
+      echo '<div class="col-md-4">
           <a href="#" class="rep-base">
               <span class="fa fa-folder-open fa-4x"></span>
               <h4 class="name-rep">' . $donnees['name'] . '</h4>

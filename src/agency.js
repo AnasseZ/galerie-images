@@ -65,4 +65,17 @@
       $("#mainNav").removeClass("navbar-shrink");
     }
   });
+
+$(".thumbnail").addEventListener('click', function() {
+    alert('Hello world');
+    console.log("AZY");
+}, false);
+
 })(jQuery); // End of use strict
+
+
+
+  alert("WESH");
+  console.log("Click");
+  $("#img-" + $(this).attr('id')).attr('src', $(this).attr('data-src'));
+};
