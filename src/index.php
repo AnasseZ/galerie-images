@@ -1,19 +1,15 @@
 <?php
 error_reporting(E_ALL);
 
-session_start();
-
 include("DatabaseConnec.php");
 
 /* Utilisation du pattern singleton afin d'instancier uniquement une seule
  connexion à la base
 */
 $instance = DatabaseConnec::getInstance();
-include 'utils.php';
 
 // Utilisation des sessions pour ne remplir qu'une seule fois la base au démarrage
-if(isset($_GET['first_run']) and $_GET['first_run'] === 15) {
-    echo "first_run";
+if(isset($_GET['first_run']) and $_GET['first_run'] == 15) {
     $instance->loadFixtures();
 }
 ?>
