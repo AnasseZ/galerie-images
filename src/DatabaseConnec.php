@@ -120,6 +120,7 @@ class DatabaseConnec {
     if ($reponse->rowCount()==0) {
       echo "<b>Il n'y a pas d'images dans ce répertoire.</b>";
     }
+    $i=1;
     while ($donnees = $reponse->fetch()) {
       echo '<div class="col-md-4 col-sm-6 galery-item">
         <a class="galery-link" data-toggle="modal" href="#myModal'. $donnees['id'] . '">
@@ -128,7 +129,7 @@ class DatabaseConnec {
               <i class="fa fa-plus fa-3x"></i>
             </div>
           </div>
-          <img data-id="#' . $donnees['id'] . '" class="img-fluid"  style="width:350px; height:200px;" data-src="/assets/'. $donnees['file_name'] . '"  src="/assets/tmp/' .
+          <img data-id="#img-' . $i . '" class="img-fluid"  style="width:350px; height:200px;" data-src="/assets/'. $donnees['file_name'] . '"  src="/assets/tmp/' .
            $donnees['file_name'] . '" alt="' . $donnees['title'] .'">
         </a>
         <div class="galery-caption">
@@ -136,6 +137,7 @@ class DatabaseConnec {
           <p class="text-muted">' . $donnees['description'] . '</p>
         </div>
       </div>';
+      $i++;
     }
   }
 
@@ -151,9 +153,13 @@ class DatabaseConnec {
       $selectQuery = "SELECT * FROM Picture";
     }
     $reponse = $this->connection->query($selectQuery);
+    $i = 1;
     while ($donnees = $reponse->fetch()) {
+      $prev = $i-1;
+      $next = $i+1;
       echo '
-      <div class="galery-modal modal fade" id="myModal'. $donnees['id'] . '" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="galery-modal modal fade" id="myModal'. $i . '" tabindex="-1" role="dialog" aria-hidden="true"
+        data-prev="#img-' . $prev . '" data-next="#img-' . $next . '">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="close-modal" data-dismiss="modal">
@@ -170,11 +176,11 @@ class DatabaseConnec {
                   <div class="modal-body">
                     <h2>'. $donnees['title'] . '</h2>
                     <p class="item-intro text-muted">'. $donnees['description'] . '</p>
-                    <img id="img-'. $donnees['id'] .'" class="img-fluid d-block mx-auto" alt="' . $donnees['title'] . ' " src="/assets/'. $donnees['file_name'] . '">
+                    <img id="img-'. $i .'" class="img-fluid d-block mx-auto" alt="' . $donnees['title'] . '" data-src="/assets/'. $donnees['file_name'] . '">
                   </div>
                 </div>
                 <div class="col-lg-2 button-modal">
-                      <button type="button" class="btn btn btn-menu btn-next">Suivante</button>
+                      <button type="button" class="btn btn btn-menu btn-next" >Suivante</button>
                 </div>
               </div>
             </div>
@@ -182,6 +188,7 @@ class DatabaseConnec {
         </div>
       </div>
       ';
+      $i++;
     }
   }
 

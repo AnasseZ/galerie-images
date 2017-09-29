@@ -15,6 +15,8 @@ $(document).ready(function() {
 
     //click next
     currentModal.find(".btn-next").click(function() {
+      console.log(currentModal.attr("data-next"));
+      loadBigPic(currentModal.attr("data-next"));
       currentModal.modal("hide");
       currentModal
         .closest("div[id^='myModal']")
@@ -25,6 +27,8 @@ $(document).ready(function() {
 
     //click prev
     currentModal.find(".btn-prev").click(function() {
+      console.log(currentModal.attr("data-prev"));
+      loadBigPic(currentModal.attr("data-prev"));
       currentModal.modal("hide");
       currentModal
         .closest("div[id^='myModal']")
@@ -62,10 +66,16 @@ $(document).ready(function() {
 
   $(".galery-hover").click(function() {
     var img = $(this).next();
-    var id = $( img.attr('data-id') );
-    $(id).attr('src', img.attr('data-src'));
+    var id = img.attr('data-id');
+    loadBigPic(id);
   });
 
+  function loadBigPic(id){
+    var attr = $(id).attr("src");
+    if(typeof attr !== undefined && attr !== false){
+      $(id).attr('src', $(id).attr('data-src'));
+    }
+  }
   // Activate scrollspy to add active class to navbar items on scroll
   $("body").scrollspy({
     target: "#mainNav",
