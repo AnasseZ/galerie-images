@@ -36,7 +36,6 @@ if(isset($_GET['first_run']) and $_GET['first_run'] == 15) {
   </head>
 
   <body id="page-top">
-
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
       <div class="container">
@@ -82,14 +81,18 @@ if(isset($_GET['first_run']) and $_GET['first_run'] == 15) {
 
     <!-- Repertoires -->
     <section id="repertoires">
-
+      <?php
+      if(isset($_GET['rep'])){
+        $currentRepo =  $instance->getRepertory($_GET['rep']);
+      }
+      ?>
       <div class="container">
         <div class="row">
           <div class="col-lg-12 text-center">
             <h2 class="name-rep">Parcourir les répertoires</h2>
             <?php
               if(isset($_GET['rep'])){
-                echo '<h4 class="description-bloc text-muted">'. $instance->getRepertoryName($_GET['rep']) .'</h4>';
+                echo '<h4 class="description-bloc text-muted">'. $currentRepo['name'] .'</h4>';
               }
               else {
                 echo '<h3 class="description-bloc text-muted">Répertoires à la base de la racine</h3>';
@@ -101,6 +104,20 @@ if(isset($_GET['first_run']) and $_GET['first_run'] == 15) {
         <div class="row text-center">
           <?php
             if(isset($_GET['rep'])){
+              if($currentRepo['parent_id'] == null){
+                $redirection = "/src/";
+              }
+              else{
+                $redirection = '?rep='.$currentRepo['parent_id'];
+              }
+              echo '
+                <div class="col-md-4">
+                  <a href="'. $redirection .'" class="rep-base">
+                      <span class="fa fa-folder-open fa-4x"></span>
+                      <h4 class="name-rep">&#8617; Retour</h4>
+                  </a>
+                </div>
+              ';
               $instance->showRepContent($_GET['rep']);
             }
             else {
@@ -121,7 +138,7 @@ if(isset($_GET['first_run']) and $_GET['first_run'] == 15) {
             <h2 class="name-rep">Galerie photos</h2>
             <?php
             if(isset($_GET['rep'])){
-              echo '<h4 class="description-bloc text-muted">'. $instance->getRepertoryName($_GET['rep']) .'</h4>';
+              echo '<h4 class="description-bloc text-muted">'. $currentRepo['name'] .'</h4>';
             }
             else {
               echo '<h3 class="description-bloc text-muted">Toutes les images présentes dans tous les répertoires et sous répertoires</h3>';

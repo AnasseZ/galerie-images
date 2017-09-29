@@ -214,6 +214,7 @@ class DatabaseConnec {
     }
 
     $reponse = $this->connection->query($selectQuery);
+
     while ($donnees = $reponse->fetch()) {
       echo '
       <div class="col-md-4">
@@ -229,14 +230,14 @@ class DatabaseConnec {
     }
   }
 
-  public function getRepertoryName($id_rep)
+  public function getRepertory($id_rep)
   {
     if (isset($id_rep)) {
       $selectQuery = "SELECT * FROM Repertory WHERE id = " . $id_rep;
       $reponse = $this->connection->query($selectQuery);
 
       while ($donnees = $reponse->fetch()) {
-        return $donnees['name'];
+        return $donnees;
       }
     }
 
