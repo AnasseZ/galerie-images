@@ -10,3 +10,12 @@ du module de Professionalisation.
   - Dans un navigateur : http://localhost:8888/src/
   - Cliquer sur le bouton " Réinitialiser la base " pour charger les données par défaut
   - Naviguer sur le site librement
+  
+# Screenshots
+
+
+### Header
+![header](header.png)
+
+### Images
+![images](images.png)
